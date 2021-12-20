@@ -9,10 +9,6 @@ namespace CctMeter
 {
     class Program
     {
-        readonly static string fatSeparator = new string('=', 80);
-        readonly static string thinSeparator = new string('-', 80);
-        readonly static int maxIterations = 100;
-
         static void Main(string[] args)
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
@@ -162,5 +158,10 @@ namespace CctMeter
             /***************************************************/
 
         }
+
+        readonly static string fatSeparator = new string('=', 80);
+        readonly static string thinSeparator = new string('-', 80);
+        readonly static int maxIterations = 100;
+
     }
 }

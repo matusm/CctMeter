@@ -9,12 +9,14 @@ namespace CctMeter
         [Option('n', "number", DefaultValue = 10, HelpText = "Number of samples.")]
         public int MaximumSamples { get; set; }
 
-        [Option("comment", DefaultValue = "---", HelpText = "User supplied comment string.")]
+        [Option("comment", DefaultValue = "", HelpText = "User supplied comment string.")]
         public string UserComment { get; set; }
 
         [Option("logfile", DefaultValue = "cctmeter.log", HelpText = "Log file name.")]
         public string LogFileName { get; set; }
 
+        [Option("skipdark", DefaultValue = false, HelpText = "Skip dark offset measurement at startup.")]
+        public bool NoOffset { get; set; }
 
         [ValueList(typeof(List<string>), MaximumElements = 2)]
         public IList<string> ListOfFileNames { get; set; }

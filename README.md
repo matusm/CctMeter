@@ -21,6 +21,8 @@ CctMeter [options]
 
 `--logfile` : Log file name.
 
+`--skipdark (-s)` : Skip dark offset measurement at startup.
+
 ### Examples
 
 ```
@@ -38,11 +40,11 @@ Use 10 samples per measurement (default). The full path of the log file is given
 
 On app start the identifications of the instrument is queried and logged.
 
-* Average value: arithmetic mean of the *n* photo current readings, in nA.                 
+* The average CCT value and its standard deviation, in K.                 
 
-* The instrument measurement range for this average value
+* The average illuminance and its standard deviation, in lx.
 
-* Standard deviation: The standard deviation of the *n* photo current readings, in nA. (Not the standard deviation of the mean!)
+* Sensor specific parameters like the internal temperature in °C and the integration time in s.
 
 
 ## Dependencies

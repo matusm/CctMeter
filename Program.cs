@@ -26,9 +26,18 @@ namespace CctMeter
             var stpE = new StatisticPod("Statistics for illuminance");
             var stpCct = new StatisticPod("Statistics for cct");
             var stpT = new StatisticPod("Statistics for internal temperature");
+            var stpIntTime = new StatisticPod("integration time");
             if (options.MaximumSamples >= maxIterations) options.MaximumSamples = maxIterations - 1;
             if (options.MaximumSamples < 2) options.MaximumSamples = 2;
             var device = new Msc15("MSC15_0");
+
+            //  format user comment
+            string prefixForIndex = $"{options.UserComment.Trim()} - ";
+            if (string.IsNullOrWhiteSpace(options.UserComment))
+            { 
+                options.UserComment = "---";
+                prefixForIndex = string.Empty;
+            }
 
             DisplayOnly("");
             LogOnly(fatSeparator);
@@ -41,59 +50,56 @@ namespace CctMeter
             LogOnly(fatSeparator);
             DisplayOnly("");
 
-            MeasureDarkOffset();
+            if (options.NoOffset == false) MeasureDarkOffset();
             SetDynamicDarkMode();
 
             DisplayOnly("");
-            DisplayOnly("press any key to start a measurement - 'd' to start with offset, 'q' to quit");
 
             int measurementIndex = 0;
 
-            ConsoleKeyInfo cki;
-            while ((cki=Console.ReadKey(true)).Key != ConsoleKey.Q)
+            bool shallLoop = true;
+            while (shallLoop)
             {
-                if(cki.Key == ConsoleKey.D)
+                DisplayOnly("press any key to start a measurement - 'd' to get dark offset, 'q' to quit");
+                ConsoleKeyInfo cki = Console.ReadKey(true);
+                switch (cki.Key)
                 {
-                    MeasureDarkOffset();
-                }
-                int iterationIndex = 0;
-                measurementIndex++;
-                DisplayOnly("");
-                DisplayOnly($"Measurement #{measurementIndex}");
-                stpE.Restart();
-                stpCct.Restart();
-                stpT.Restart();
-                timeStamp = DateTime.UtcNow;
-
-                while (stpCct.SampleSize < options.MaximumSamples)
-                {
-                    iterationIndex++;
-                    device.Measure();
-                    stpE.Update(device.PhotopicValue);
-                    stpCct.Update(device.CctValue);
-                    stpT.Update(device.InternalTemperature);
-                    DisplayOnly($"{stpCct.SampleSize,4}:   {device.CctValue:F0} K    {device.PhotopicValue:F2} lx");
-                    if (iterationIndex >= maxIterations)
-                    {
+                    case ConsoleKey.Q:
+                        shallLoop = false;
                         break;
-                    }
-                }
-                if (iterationIndex >= maxIterations)
-                {
-                    DisplayOnly("To many iterations! Giving up ...");
-                    break;
-                }
-                DisplayOnly("");
-                LogOnly($"Measurement number:            {measurementIndex}");
-                LogOnly($"Triggered at:                  {timeStamp:dd-MM-yyyy HH:mm:ss}");
-                LogAndDisplay($"CCT value:                     {stpCct.AverageValue:F1} ± {stpCct.StandardDeviation:F1} K");
-                LogAndDisplay($"Illuminance:                   {stpE.AverageValue:F2} ± {stpE.StandardDeviation:F2} lx");
-                LogAndDisplay($"Internal temperature:          {stpT.AverageValue:F1} °C");
-                LogOnly(thinSeparator);
-                DisplayOnly("");
-                DisplayOnly("press any key to start a measurement - 'd' to start with offset, 'q' to quit");
-            }
+                    case ConsoleKey.D:
+                        MeasureDarkOffset();
+                        LogOnly($"Dark offset measured at {DateTime.UtcNow:dd-MM-yyyy HH:mm:ss}");
+                        LogOnly(thinSeparator);
+                        break;
+                    default:
+                        int iterationIndex = 0;
+                        measurementIndex++;
+                        DisplayOnly("");
+                        DisplayOnly($"Measurement #{measurementIndex}");
+                        RestartValues();
+                        timeStamp = DateTime.UtcNow;
 
+                        while (iterationIndex < options.MaximumSamples)
+                        {
+                            iterationIndex++;
+                            device.Measure();
+                            UpdateValues();
+                            DisplayOnly($"{stpCct.SampleSize,4}:   {device.CctValue:F0} K    {device.PhotopicValue:F2} lx");
+                        }
+
+                        DisplayOnly("");
+                        LogOnly($"Measurement number:            {prefixForIndex}{measurementIndex}");
+                        LogOnly($"Triggered at:                  {timeStamp:dd-MM-yyyy HH:mm:ss}");
+                        LogAndDisplay($"CCT value:                     {stpCct.AverageValue:F1} ± {stpCct.StandardDeviation:F1} K");
+                        LogAndDisplay($"Illuminance:                   {stpE.AverageValue:F3} ± {stpE.StandardDeviation:F3} lx");
+                        LogAndDisplay($"Integration time:              {stpIntTime.AverageValue} s"); // the shortest time is 12 us
+                        LogAndDisplay($"Internal temperature:          {stpT.AverageValue:F1} °C");
+                        LogOnly(thinSeparator);
+                        DisplayOnly("");
+                        break;
+                }
+            }
             DisplayOnly("bye.");
             LogOnly("");
             LogOnly(fatSeparator);
@@ -106,6 +112,22 @@ namespace CctMeter
 
             streamWriter.Close();
 
+            /***************************************************/
+            void RestartValues()
+            {
+                stpE.Restart();
+                stpCct.Restart();
+                stpT.Restart();
+                stpIntTime.Restart();
+            }
+            /***************************************************/
+            void UpdateValues()
+            {
+                stpE.Update(device.PhotopicValue);
+                stpCct.Update(device.CctValue);
+                stpT.Update(device.InternalTemperature);
+                stpIntTime.Update(device.GetLastIntegrationTime());
+            }
             /***************************************************/
             void SetDynamicDarkMode()
             {

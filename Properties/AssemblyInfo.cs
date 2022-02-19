@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("BEV")]
 [assembly: AssemblyProduct("CctMeter")]
-[assembly: AssemblyCopyright("Copyright © BEV 2021")]
+[assembly: AssemblyCopyright("Michael Matus © 2021-2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

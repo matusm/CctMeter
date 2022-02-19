@@ -5,7 +5,9 @@ CctMeter - A Logger for Spectroradiometers
 
 A standalone command line app controlling the portable spectroradiometers MSC15 and CSS-45 by [Gigahertz-Optik GmbH](https://www.gigahertz-optik.com/) via its USB interface.
 
-Its main usage is to correlated color temperature (CCT) measurements of light sources. This process can be triggered manually whenever needed. A timestamp, average value, dispersion parameters and the corresponding photometric quantity values are logged in a file.
+Its main usage is to measure the correlated color temperature (CCT) of light sources during calibration work. This process can be triggered manually whenever needed. A timestamp, average value, dispersion parameters and the corresponding photometric quantity values are logged in a file.
+
+If more parameters or even spectra are needed, the app [MSC15test](https://github.com/matusm/MSC15test) can be used.
 
 ## Command Line Usage
 

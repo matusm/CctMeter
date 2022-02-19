@@ -12,14 +12,14 @@ namespace CctMeter
         [Option("comment", DefaultValue = "", HelpText = "User supplied comment string.")]
         public string UserComment { get; set; }
 
-        [Option("logfile", DefaultValue = "cctmeter.log", HelpText = "Log file name.")]
+        [Option("logfile", DefaultValue = "cctmeter.log", HelpText = "Log file path.")]
         public string LogFileName { get; set; }
 
-        [Option("skipdark", DefaultValue = false, HelpText = "Skip dark offset measurement at startup.")]
+        [Option('s', "skipdark", DefaultValue = false, HelpText = "Skip dark offset measurement at startup.")]
         public bool NoOffset { get; set; }
 
-        [ValueList(typeof(List<string>), MaximumElements = 2)]
-        public IList<string> ListOfFileNames { get; set; }
+        //[ValueList(typeof(List<string>), MaximumElements = 2)]
+        //public IList<string> ListOfFileNames { get; set; }
 
         [HelpOption]
         public string GetUsage()
@@ -44,7 +44,5 @@ namespace CctMeter
 
             return help;
         }
-
     }
-
 }

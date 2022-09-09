@@ -12,6 +12,9 @@ namespace CctMeter
         [Option("comment", DefaultValue = "", HelpText = "User supplied comment string.")]
         public string UserComment { get; set; }
 
+        [Option("device", DefaultValue = "MSC15_0", HelpText = "Device name.")]
+        public string DeviceName { get; set; }
+
         [Option("logfile", DefaultValue = "cctmeter.log", HelpText = "Log file path.")]
         public string LogFileName { get; set; }
 

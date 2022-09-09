@@ -29,7 +29,7 @@ namespace CctMeter
             var stpIntTime = new StatisticPod("integration time");
             if (options.MaximumSamples >= maxIterations) options.MaximumSamples = maxIterations - 1;
             if (options.MaximumSamples < 2) options.MaximumSamples = 2;
-            var device = new Msc15("MSC15_0");
+            var device = new Msc15(options.DeviceName);
 
             //  format user comment
             string prefixForIndex = $"{options.UserComment.Trim()} - ";

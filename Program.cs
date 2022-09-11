@@ -43,6 +43,7 @@ namespace CctMeter
             LogOnly(fatSeparator);
             DisplayOnly($"Application:  {appName} {appVersionString}");
             LogOnly($"Application:  {appName} {appVersion}");
+            LogAndDisplay($"DLL version:  {device.DllVersion}");
             LogAndDisplay($"StartTimeUTC: {timeStamp:dd-MM-yyyy HH:mm}");
             LogAndDisplay($"InstrumentID: {device.InstrumentManufacturer} {device.InstrumentID}");
             LogAndDisplay($"Samples (n):  {options.MaximumSamples}");
